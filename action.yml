@@ -78,7 +78,7 @@ runs:
       uses: actions/checkout@v4
       with:
         repository: cloudware-com-kh/setup-oci-nsg
-        ref: v1.0.1
+        ref: v1.0.2
 
     # Configure AWS credentials for S3 backend
     - name: Configure AWS credentials
