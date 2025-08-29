@@ -9,9 +9,11 @@ inputs:
   aws-access-key-id:
     description: "AWS Access Key ID for S3 backend"
     required: true
+    default: ${{ env.AWS_ACCESS_KEY_ID }}
   aws-secret-access-key:
     description: "AWS Secret Access Key for S3 backend"
     required: true
+    default: ${{ env.AWS_SECRET_ACCESS_KEY }}
   aws-region:
     description: "AWS region for S3 backend"
     required: false
@@ -25,24 +27,31 @@ inputs:
   oci-user-id:
     description: "OCI CLI User OCID"
     required: true
+    default: ${{ env.OCI_USER_ID }}
   oci-tenancy-id:
     description: "OCI CLI Tenancy OCID"
     required: true
+    default: ${{ env.OCI_TENANCY_ID }}
   oci-fingerprint:
     description: "OCI CLI Fingerprint"
     required: true
+    default: ${{ env.OCI_FINGERPRINT }}
   oci-private-key:
     description: "OCI CLI Private Key Content"
     required: true
+    default: ${{ env.OCI_PRIVATE_KEY }}
   oci-region:
     description: "OCI Region"
     required: true
+    default: ${{ env.OCI_REGION }}
   oci-compartment-id:
     description: "OCI Compartment OCID"
     required: true
+    default: ${{ env.OCI_COMPARTMENT_ID }}
   oci-nsg-id:
     description: "OCI Network Security Group ID"
     required: true
+    default: ${{ env.OCI_NSG_ID }}
 
   # Terraform Configuration
   terraform-version:
@@ -78,7 +87,7 @@ runs:
       uses: actions/checkout@v4
       with:
         repository: cloudware-com-kh/setup-oci-nsg
-        ref: v1.0.3
+        ref: v1.0.4
 
     # Configure AWS credentials for S3 backend
     - name: Configure AWS credentials
