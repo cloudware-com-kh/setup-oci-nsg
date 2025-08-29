@@ -56,7 +56,7 @@ inputs:
   auto-destroy:
     description: "Whether to automatically destroy resources after apply"
     required: false
-    default: "true"
+    default: "false"
   apply-infrastructure:
     description: "Whether to apply infrastructure changes"
     required: false
@@ -78,7 +78,7 @@ runs:
       uses: actions/checkout@v4
       with:
         repository: cloudware-com-kh/setup-oci-nsg
-        ref: v1.0.2
+        ref: v1.0.3
 
     # Configure AWS credentials for S3 backend
     - name: Configure AWS credentials
@@ -113,29 +113,6 @@ runs:
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
 
-    # Terraform Plan
-    - name: Terraform Plan
-      if: ${{ inputs.apply-infrastructure == 'true' }}
-      shell: bash
-      working-directory: ${{ inputs.terraform-working-directory }}
-      run: terraform plan -input=false
-      env:
-        # OCI Provider Environment Variables
-        OCI_CLI_USER: ${{ inputs.oci-user-id }}
-        OCI_CLI_TENANCY: ${{ inputs.oci-tenancy-id }}
-        OCI_CLI_FINGERPRINT: ${{ inputs.oci-fingerprint }}
-        OCI_CLI_KEY_CONTENT: ${{ inputs.oci-private-key }}
-        OCI_CLI_REGION: ${{ inputs.oci-region }}
-        # Terraform Variables
-        TF_VAR_tenancy_id: ${{ inputs.oci-tenancy-id }}
-        TF_VAR_user_id: ${{ inputs.oci-user-id }}
-        TF_VAR_region: ${{ inputs.oci-region }}
-        TF_VAR_compartment_id: ${{ inputs.oci-compartment-id }}
-        TF_VAR_nsg_id: ${{ inputs.oci-nsg-id }}
-        TF_VAR_api_fingerprint: ${{ inputs.oci-fingerprint }}
-        TF_VAR_api_private_key: ${{ inputs.oci-private-key }}
-        TF_VAR_ingress_cidr: ${{ steps.get-ip.outputs.ipv4 }}/32
-
     # Apply Terraform changes
     - name: Terraform Apply
       if: ${{ inputs.apply-infrastructure == 'true' }}
@@ -158,23 +135,6 @@ runs:
         TF_VAR_api_fingerprint: ${{ inputs.oci-fingerprint }}
         TF_VAR_api_private_key: ${{ inputs.oci-private-key }}
         TF_VAR_ingress_cidr: ${{ steps.get-ip.outputs.ipv4 }}/32
-
-    # Get Terraform outputs
-    - name: Get Terraform Output
-      if: ${{ inputs.apply-infrastructure == 'true' }}
-      id: output
-      shell: bash
-      working-directory: ${{ inputs.terraform-working-directory }}
-      run: |
-        OUTPUT=$(terraform output -json)
-        echo "stdout=$OUTPUT" >> $GITHUB_OUTPUT
-      env:
-        # OCI Provider Environment Variables
-        OCI_CLI_USER: ${{ inputs.oci-user-id }}
-        OCI_CLI_TENANCY: ${{ inputs.oci-tenancy-id }}
-        OCI_CLI_FINGERPRINT: ${{ inputs.oci-fingerprint }}
-        OCI_CLI_KEY_CONTENT: ${{ inputs.oci-private-key }}
-        OCI_CLI_REGION: ${{ inputs.oci-region }}
 
     # Destroy infrastructure if auto-destroy is enabled
     - name: Terraform Destroy
