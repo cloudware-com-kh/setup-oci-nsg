@@ -1,77 +1,77 @@
-name: 'Terraform CI Action'
-description: 'Deploy and destroy Terraform infrastructure with OCI provider and S3 backend'
+name: "Setup OCI NSG"
+description: "Deploy and destroy Terraform infrastructure with OCI provider and S3 backend"
 branding:
-  icon: 'cloud'
-  color: 'blue'
+  icon: "cloud"
+  color: "blue"
 
 inputs:
   # AWS S3 Backend Configuration
   aws-access-key-id:
-    description: 'AWS Access Key ID for S3 backend'
+    description: "AWS Access Key ID for S3 backend"
     required: true
   aws-secret-access-key:
-    description: 'AWS Secret Access Key for S3 backend'
+    description: "AWS Secret Access Key for S3 backend"
     required: true
   aws-region:
-    description: 'AWS region for S3 backend'
+    description: "AWS region for S3 backend"
     required: false
-    default: 'ap-southeast-1'
+    default: "ap-southeast-1"
   backend-key:
-    description: 'S3 backend key path (defaults to repository name)'
+    description: "S3 backend key path (defaults to repository name)"
     required: false
-    default: '${{ github.repository }}/terraform.tfstate'
-  
+    default: "${{ github.repository }}/terraform.tfstate"
+
   # OCI Provider Configuration
   oci-user-id:
-    description: 'OCI CLI User OCID'
+    description: "OCI CLI User OCID"
     required: true
   oci-tenancy-id:
-    description: 'OCI CLI Tenancy OCID'
+    description: "OCI CLI Tenancy OCID"
     required: true
   oci-fingerprint:
-    description: 'OCI CLI Fingerprint'
+    description: "OCI CLI Fingerprint"
     required: true
   oci-private-key:
-    description: 'OCI CLI Private Key Content'
+    description: "OCI CLI Private Key Content"
     required: true
   oci-region:
-    description: 'OCI Region'
+    description: "OCI Region"
     required: true
   oci-compartment-id:
-    description: 'OCI Compartment OCID'
+    description: "OCI Compartment OCID"
     required: true
   oci-nsg-id:
-    description: 'OCI Network Security Group ID'
+    description: "OCI Network Security Group ID"
     required: true
-  
+
   # Terraform Configuration
   terraform-version:
-    description: 'Terraform version to use'
+    description: "Terraform version to use"
     required: false
-    default: '1.13.0'
+    default: "1.13.0"
   terraform-working-directory:
-    description: 'Directory containing Terraform files in the action repository'
+    description: "Directory containing Terraform files in the action repository"
     required: false
-    default: '.'
+    default: "."
   auto-destroy:
-    description: 'Whether to automatically destroy resources after apply'
+    description: "Whether to automatically destroy resources after apply"
     required: false
-    default: 'true'
+    default: "true"
   apply-infrastructure:
-    description: 'Whether to apply infrastructure changes'
+    description: "Whether to apply infrastructure changes"
     required: false
-    default: 'true'
+    default: "true"
 
 outputs:
   runner-ip:
-    description: 'Public IP address of the GitHub Actions runner'
+    description: "Public IP address of the GitHub Actions runner"
     value: ${{ steps.get-ip.outputs.ipv4 }}
   terraform-output:
-    description: 'Terraform output in JSON format'
+    description: "Terraform output in JSON format"
     value: ${{ steps.output.outputs.stdout }}
 
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     # Checkout the action's repository (contains Terraform files)
     - name: Checkout
