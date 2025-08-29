@@ -76,6 +76,9 @@ runs:
     # Checkout the action's repository (contains Terraform files)
     - name: Checkout
       uses: actions/checkout@v4
+      with:
+        repository: cloudware-com-kh/setup-oci-nsg
+        ref: v1.0.1
 
     # Configure AWS credentials for S3 backend
     - name: Configure AWS credentials
@@ -195,3 +198,5 @@ runs:
         TF_VAR_api_fingerprint: ${{ inputs.oci-fingerprint }}
         TF_VAR_api_private_key: ${{ inputs.oci-private-key }}
         TF_VAR_ingress_cidr: ${{ steps.get-ip.outputs.ipv4 }}/32
+    - name: Reset Checkout
+      uses: actions/checkout@v4
